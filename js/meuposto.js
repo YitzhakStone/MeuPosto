@@ -1,0 +1,174 @@
+// Redimensionar o mapa para ficar na tela toda
+$(document).ready(function () {
+    var bodyheight = $(window).height();
+    $("#googleMap").height(bodyheight - 50);
+});
+
+// for the window resize
+$(window).resize(function () {
+    var bodyheight = $(window).height();
+    $("#googleMap").height(bodyheight - 50);
+});
+
+var map;
+var opendInfoWindow;
+var sorompilo;
+
+function carregarTodosOsPostos() {
+    jQuery.ajax({
+        url: 'py/meuposto_todos.py',
+        type: "POST",
+        data: "{ }",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+            //alert("Start!!! ");
+        },
+        success: function (data) {
+            data.forEach(AddMarker);
+        },
+        failure: function (msg) { alert("Sorry!!! "); }
+    });
+}
+
+function carregarPostos() {
+    var bounds = map.getBounds();
+    jQuery.ajax({
+        url: 'py/meuposto.py',
+        type: "POST",
+        //data: "{'teste' : " + "'" + bounds + "'" + "}",
+        data: bounds.toString(),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+            //alert("Start!!! ");
+        },
+        success: function (data) {
+            data.forEach(AddMarker);
+        },
+        failure: function (msg) { alert("Sorry!!! "); }
+    });
+}
+
+function AddMarker(value, index, ar) {
+    // Create a marker and set its position.
+    var myLatLng = { lat: parseFloat(value.Lat), lng: parseFloat(value.Lng) };
+    var marker = new google.maps.Marker({
+        map: map,
+        position: myLatLng,
+        title: value.Nome
+    });
+
+    var nota = value.Avaliacao != null ? value.Avaliacao + ' / 5' : 'Sem nota';
+
+    var infowindow = new google.maps.InfoWindow({
+        content: 
+            '<b>' + value.Nome + '</b>' +
+            '<br /><br />' + value.Logr + ', ' + value.Num + ' - ' + value.Bairro + 
+            '<br /><br />Nota: ' + nota +
+            '<br /><br /><a href="#" onClick="tracarRota(\'\', \'' + value.Lat + ', ' + value.Lng + '\')">Rota</a>'
+    });
+
+    // preencher o conteúdo do balão a cada clique. utiliza apenas um 'infowindow'
+    //google.maps.event.addListener(someMarker, 'click', function () {
+    //    infowindow.setContent('Hello World');
+    //    infowindow.open(map, this);
+    //});
+
+    // abre balão de info ao clicar no marker
+    // e fecha o balão que estiver aberto
+    marker.addListener('click', function () {
+        if (opendInfoWindow != undefined) {
+            opendInfoWindow.close();
+        }
+        infowindow.open(map, marker);
+        opendInfoWindow = infowindow;
+    });
+
+}
+
+function initialize() {
+    var mapProp = {
+        center: new google.maps.LatLng(-19.858139, -43.919193),
+        zoom: 15,
+        panControl: true,
+        zoomControl: true,
+        mapTypeControl: true,
+        scaleControl: false,
+        streetViewControl: false,
+        overviewMapControl: false,
+        rotateControl: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    //google.maps.event.addListenerOnce(map, 'idle', carregarTodosOsPostos);
+    google.maps.event.addListener(map, 'idle', carregarPostos);
+
+    /* localização */
+    // Try W3C Geolocation (Preferred)
+    if (navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function (position) {
+            initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            sorompilo = initialLocation;
+            map.setCenter(initialLocation);
+        }, function () {
+            handleNoGeolocation(browserSupportFlag);
+        });
+    }
+        // Browser doesn't support Geolocation
+    else {
+        browserSupportFlag = false;
+        handleNoGeolocation(browserSupportFlag);
+    }
+
+    function handleNoGeolocation(errorFlag) {
+        if (errorFlag == true) {
+            alert("Geolocation service failed.");
+            initialLocation = newyork;
+        } else {
+            alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
+            initialLocation = siberia;
+        }
+        map.setCenter(initialLocation);
+    }
+    /* fim localização */
+
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+/* traçar rota */
+function tracarRota(enderDe, enderAte) {
+    var directionsService;
+    var directionsRenderer;
+
+    directionsService = new google.maps.DirectionsService();
+
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    /* pegar localização atual */
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            enderDe = position.coords.latitude + ", " + position.coords.longitude;
+        }, function () {
+        });
+    }
+    /* fim pegar localização atual */
+
+    //directionsDisplay.setMap(null);
+
+    var request = {
+        origin: sorompilo,
+        destination: enderAte,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    };
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsRenderer.setDirections(response);
+        }
+    });
+}
+/* fim traçar rota */

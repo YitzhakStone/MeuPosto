@@ -1,0 +1,11 @@
+#googleMap {
+    width: 100%;
+}
+
+body {
+    padding-bottom: 0;
+}
+
+div.container.body-content {
+    display: none;
+}
