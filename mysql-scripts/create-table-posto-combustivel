@@ -4,5 +4,5 @@ CREATE TABLE PostoCombustivel (
   Valor real not null,
   primary key(IDPosto, IDComb),
   constraint foreign key (IDPosto) references Posto(ID),
-  constraint foreign key (IDPosto) references TipoCombustivel(ID)
+  constraint foreign key (IDComb) references TipoCombustivel(ID)
 );
