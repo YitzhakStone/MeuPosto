@@ -1,0 +1,4 @@
+CREATE TABLE TipoCombustivel (
+  ID int primary key auto_increment,
+  DescComb varchar(30) not null
+);
