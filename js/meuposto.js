@@ -18,9 +18,10 @@ var all_markers = {};
 function carregarPostos() {
     var bounds = map.getBounds();
     jQuery.ajax({
+        //url: 'http://yitzhakstone.pythonanywhere.com/',
+        //type: "GET",
         url: 'py/meuposto.py',
         type: "POST",
-        //data: "{'teste' : " + "'" + bounds + "'" + "}",
         data: bounds.toString(),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
