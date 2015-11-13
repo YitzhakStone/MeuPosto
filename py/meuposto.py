@@ -8,58 +8,12 @@ import cgi, cgitb
 
 cgitb.enable()  # for troubleshooting
 
-#####################################
-# Servidor web sem framework
-#####################################
-
 # get input (POST)
 
 data = cgi.FieldStorage()
 jsonin = str(data.value)
 
-# Comentar a linha abaixo se usar servidor webPy
 print BuscarPostos(queryString)
-
-#####################################
-# Servidor web com framework python
-#####################################
-
-def application(environ, start_response):
-    if environ.get('PATH_INFO') == '/MeuPosto/':
-        status = '200 OK'
-        f = open('/var/www/MeuPosto/index.html','r')
-        content = f.read()
-        f.close()
-        contentType = 'text/html'
-
-    elif '/MeuPosto/' in environ.get('PATH_INFO'):
-        path = environ.get('PATH_INFO')
-        ext = path[path.index('.')+1:]
-        arquivo = path
-        if '?' in path:
-            arquivo = path[0:path.index('?')]
-        status = '200 OK'
-        f = open('/var/www' + arquivo ,'r')
-        content = f.read()
-        f.close()
-        contentType = 'text/' + ext
-        if 'js' in path:
-            contentType = 'application/javascript'
-
-    elif environ.get('PATH_INFO') == '/':
-        status = '200 OK'
-        queryString = environ.get('QUERY_STRING')
-        content = BuscarPostos(queryString)
-        contentType = 'application/json'
-
-    else:
-        status = '404 NOT FOUND'
-        content = 'Page not found.'
-        contentType = 'text/html'
-
-    response_headers = [('Content-Type', contentType), ('Content-Length', str(len(content))), ('Access-Control-Allow-Origin','http://yitzhakstone.github.io'), ('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Key')];
-    start_response(status, response_headers)
-    yield content
 
 #####################################
 # Métodos
