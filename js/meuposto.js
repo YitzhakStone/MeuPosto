@@ -18,7 +18,7 @@ var all_markers = {};
 function carregarPostos() {
     var bounds = map.getBounds();
     jQuery.ajax({
-        url: 'py/meuposto.py',
+        url: 'py/recuperar-postos.py',
         type: "POST",
         //data: "{'teste' : " + "'" + bounds + "'" + "}",
         data: bounds.toString(),
@@ -65,7 +65,7 @@ function AddMarker(value, index, ar) {
             </div>\
             <br />\
                 <table><tr><th>Gasolina</th><th>Álcool</th><th>Diesel</th><th>GNV</th><th>Gas.Adt.</th><th>Gas.Premium</th></tr>\
-                <tr>' + '<td>' + value.Valor_Gasolina + '</td><td>' + value.Valor_Alcool + '</td><td>' + value.Valor_Diesel + '</td><td>' + value.Valor_GNV + '</td><td>' + value.Valor_GasolinaAdt + '</td><td>' + value.Valor_GasolinaPremium + '</td></tr>\
+                <tr>' + '<td>' + value.ValorGasolina + '</td><td>' + value.ValorAlcool + '</td><td>' + value.ValorDiesel + '</td><td>' + value.ValorGNV + '</td><td>' + value.ValorGasolinaAdt + '</td><td>' + value.ValorGasolinaPremium + '</td></tr>\
                 </table>\
             <br />\
             <a href="#" onClick="tracarRota(\'\', \'' + value.Lat + ', ' + value.Lng + '\')">Rota</a>'

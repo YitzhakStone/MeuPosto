@@ -23,20 +23,7 @@ latMax = coords[2];
 lngMax = coords[3];
 
 db = MySQLdb.connect(host="localhost", user="root", passwd="balde", db="MeuPosto")
-cur = db.cursor() 
-
-'''
-cur.execute(""" 
-  SELECT 
-    P.ID, P.Nome, P.Logr, P.Num, P.Bairro, P.Lat, P.Lng, A.Avaliacao 
-  FROM 
-    Posto P LEFT JOIN 
-    PostoAvaliacao A ON P.ID = A.IDPosto 
-  WHERE """
-    "P.Lat BETWEEN " + latMin + " AND " + latMax + " AND "
-    "P.Lng BETWEEN " + lngMin + " AND " + lngMax + " "
-  ";")
-'''
+cur = db.cursor()
 
 cur.execute("""
   SELECT
@@ -50,7 +37,7 @@ cur.execute("""
   FROM
     Posto P LEFT JOIN
     (
-  	SELECT A.IDPosto, AVG(A.Avaliacao) AS Avaliacao FROM PostoAvaliacao A GROUP BY A.IDPosto
+    SELECT A.IDPosto, AVG(A.Avaliacao) AS Avaliacao FROM PostoAvaliacao A GROUP BY A.IDPosto
     ) AS T ON T.IDPosto = P.ID
   WHERE """
     "P.Lat BETWEEN " + latMin + " AND " + latMax + " AND "
@@ -58,13 +45,6 @@ cur.execute("""
   ";")
 
 rows = cur.fetchall()
-
-# Convert query to row arrays
-
-rowarray_list = []
-for row in rows:
-    t = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-    rowarray_list.append(t)
 
 # Convert query to row arrays
 
