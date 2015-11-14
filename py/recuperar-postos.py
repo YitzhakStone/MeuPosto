@@ -28,12 +28,12 @@ cur = db.cursor()
 cur.execute("""
   SELECT
     P.ID, P.Nome, P.Logr, P.Num, P.Bairro, P.Lat, P.Lng, T.Avaliacao,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 1) AS Valor_Alcool,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 2) AS Valor_Gasolina,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 3) AS Valor_GNV,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 4) AS Valor_Diesel,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 5) AS Valor_GasolinaAdt,
-    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 6) AS Valor_GasolinaPremium
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 1) AS ValorAlcool,
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 2) AS ValorGasolina,
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 3) AS ValorGNV,
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 4) AS ValorDiesel,
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 5) AS ValorGasolinaAdt,
+    (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 6) AS ValorGasolinaPremium
   FROM
     Posto P LEFT JOIN
     (
@@ -67,12 +67,12 @@ for row in rows:
     d['Lat'] = str(row[5])
     d['Lng'] = str(row[6])
     d['Avaliacao'] = str(row[7])
-    d['Valor_Alcool'] = str(row[8])
-    d['Valor_Gasolina'] = str(row[9])
-    d['Valor_GNV'] = str(row[10])
-    d['Valor_Diesel'] = str(row[11])
-    d['Valor_GasolinaAdt'] = str(row[12])
-    d['Valor_GasolinaPremium'] = str(row[13])
+    d['ValorAlcool'] = str(row[8])
+    d['ValorGasolina'] = str(row[9])
+    d['ValorGNV'] = str(row[10])
+    d['ValorDiesel'] = str(row[11])
+    d['ValorGasolinaAdt'] = str(row[12])
+    d['ValorGasolinaPremium'] = str(row[13])
     objects_list.append(d)
 
 # convert to json
