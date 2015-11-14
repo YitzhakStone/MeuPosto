@@ -137,7 +137,8 @@ destinations = []
 
 # Concatena endereços e joga num array para busca de distancia na API do GMaps
 for k, v in postos.iteritems():
-    endereco = v['Logr'] + ', ' + str(v['Num']) + ', ' + v['Bairro'] + ' Belo Horizonte, MG'
+    #endereco = v['Logr'] + ', ' + str(v['Num']) + ', ' + v['Bairro'] + ' Belo Horizonte, MG'
+    endereco = str(v['Lat']) + ', ' + str(v['Lng'])
     destinations.append(endereco)
 
 # Calcula a distancia

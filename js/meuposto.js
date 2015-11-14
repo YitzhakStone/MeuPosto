@@ -204,6 +204,11 @@ function tracarRota(enderDe, enderAte) {
 $(document).ready(function () {
     $("#buscar-melhor").click(function(e) {
         e.preventDefault();
+
+        latcenter = map.getCenter().lat();
+        lngcenter = map.getCenter().lng()
+        queryStr = 'lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
+
         window.open('py/calcular-melhor-posto.py?' + queryStr);
         
     });
