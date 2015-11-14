@@ -1,8 +1,0 @@
-CREATE TABLE PostoCombustivel (
-  IDPosto int not null,
-  IDComb int not null,
-  Valor real not null,
-  primary key(IDPosto, IDComb),
-  constraint foreign key (IDPosto) references Posto(ID),
-  constraint foreign key (IDComb) references TipoCombustivel(ID)
-);
