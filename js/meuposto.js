@@ -18,20 +18,21 @@ var queryStr = '';
 
 function carregarPostos() {
     var bounds = map.getBounds();
+    var latMin = bounds.O.O.toString()
+    var latMax = bounds.O.j.toString();
+    var lngMin = bounds.j.j.toString();
+    var lngMax = bounds.j.O.toString();
+    queryStr = '?latMin=' + latMin + "&latMax=" + latMax + "&lngMin=" + lngMin + "&lngMax=" + lngMax;
+
     jQuery.ajax({
-        url: 'py/recuperar-postos.py',
-        type: "POST",
-        //data: "{'teste' : " + "'" + bounds + "'" + "}",
-        data: bounds.toString(),
+        url: 'py/recuperar-postos.py' + queryStr,
+        type: "GET",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        beforeSend: function () {
-            //alert("Start!!! ");
-        },
         success: function (data) {
             data.forEach(AddMarker);
         },
-        failure: function (msg) { alert("Sorry!!! "); }
+        failure: function (msg) { alert("Ocorreu um erro !!! "); }
     });
 }
 
@@ -57,7 +58,7 @@ function AddMarker(value, index, ar) {
     var infowindow = new google.maps.InfoWindow({
         content: 
             '<a class="idposto" style="display:none">' + value.ID + '</a>\
-            <b>' + value.Nome + '</b>\
+            <b>[' + value.ID + '] ' + value.Nome + '</b>\
             <br>' + value.Logr + ', ' + value.Num + ' - ' + value.Bairro + '\
             <br /><br />Nota: ' + nota + '\
             <div id="rating' + value.ID + '" class="rating" style="display:none;" \
@@ -207,9 +208,9 @@ $(document).ready(function () {
 
         latcenter = map.getCenter().lat();
         lngcenter = map.getCenter().lng()
-        queryStr = 'lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
+        queryStr = '?lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
 
-        window.open('py/calcular-melhor-posto.py?' + queryStr);
+        window.open('py/calcular-melhor-posto.py' + queryStr);
         
     });
 });

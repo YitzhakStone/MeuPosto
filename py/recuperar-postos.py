@@ -6,22 +6,17 @@ import json
 import collections
 import cgi, cgitb 
 
-cgitb.enable()  # for troubleshooting
+# for troubleshooting
+cgitb.enable()
 
-# get input (POST)
-
+# get input
 data = cgi.FieldStorage()
-jsonin = str(data.value)
+latMin = data["latMin"].value
+latMax = data["latMax"].value
+lngMin = data["lngMin"].value
+lngMax = data["lngMax"].value
 
-# separate params of input
-
-jsonin = jsonin.replace("(", "").replace(")", "").replace(" ", "");
-coords = jsonin.split(',');
-latMin = coords[0];
-lngMin = coords[1];
-latMax = coords[2];
-lngMax = coords[3];
-
+# executa comandos no sql
 db = MySQLdb.connect(host="localhost", user="root", passwd="balde", db="MeuPosto")
 cur = db.cursor()
 
