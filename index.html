@@ -4,25 +4,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeuPosto</title>
     <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>MeuPosto</title>
+
+    <!-- BOOTSTRAP CSS -->
+    <link rel="stylesheet"  href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap/css/font-awesome-4.4.0.min.css">
+    
     <link rel="stylesheet" href="css/meuposto.css">
     <link rel="stylesheet" href="css/star-rating.css">
-    <link rel="stylesheet"  href="css/bootstrap-3.3.5.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome-4.4.0.min.css">
+
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAkUbsC-g6QhmpIbKtC9Mr11cGziUKZBKw&signed_in=false"></script>
+
+    <!-- BOOTSTRAP JS --> 
+    <script src="bootstrap/js/bootstrap.js"></script>
+
+    <script src="js/meuposto.js"></script>
+    <script src="js/star-rating.js"></script>
 </head>
 
 <body>
 
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAkUbsC-g6QhmpIbKtC9Mr11cGziUKZBKw&signed_in=false"></script>
-    <script src="js/meuposto.js"></script>
-    <script src="js/star-rating.js"></script>
+    <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">MeuPosto</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="./">Home</a></li>
+                    <li><a href="./">Sobre</a></li>
+                    <li><a href="./">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-
+    <div id="site">
+        <div id="googleMap"></div>
+    </div>
     <a href="#" id="buscar-melhor">Encontrar o melhor posto !!!</a>
-
-    <div id="googleMap"></div>
 
 </body>
 </html>

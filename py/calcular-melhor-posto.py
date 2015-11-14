@@ -19,13 +19,17 @@ def Normalizar(_valMin, _valMax, _val):
     difT = _valMax - _valMin
     difV = _valMax - _val
     if difT == 0: return 1
-    val = difV / difT
+    val = float(difV) / float(difT)
     return val
 
 def NormalizarNota(_nota):
-    if _nota == None: _nota = 2.0
+    if _nota == None: _nota = 3.0
     notaNorm = float(_nota) / 5.0
     return notaNorm
+
+def CalcularValor(_dist, _preco, _nota):
+    _dist
+    valor = ((_dist if _dist != None else 0) + (_preco if _preco != None else 0) + (_nota if _nota != None else 0)) / 3
 
 #########################################
 # Inicio
@@ -169,7 +173,8 @@ for k, v in postos.iteritems():
     v['ValorGasolina_Norm'] = Normalizar(valMinGas, valMaxGas, v['ValorGasolina'])
     v['Avaliacao_Norm'] = NormalizarNota(v['Avaliacao'])
 
-    v['NotaFinal'] = ((v['Distancia_Norm'] if v['Distancia_Norm'] != None else 0) + (v['ValorGasolina_Norm'] if v['ValorGasolina_Norm'] != None else 0) + (v['Avaliacao_Norm'] if v['Avaliacao_Norm'] != None else 0)) / 3
+    #v['NotaFinal'] = ((v['Distancia_Norm'] if v['Distancia_Norm'] != None else 0) + (v['ValorGasolina_Norm'] if v['ValorGasolina_Norm'] != None else 0) + (v['Avaliacao_Norm'] if v['Avaliacao_Norm'] != None else 0)) / 3
+    v['NotaFinal'] = CalcularValor(float(v['Distancia_Norm']), float(v['ValorGasolina_Norm']), float(v['Avaliacao_Norm']))
 
     dist_i = dist_i + 1
 

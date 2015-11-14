@@ -1,13 +1,13 @@
 // Redimensionar o mapa para ficar na tela toda
 $(document).ready(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 50);
+    $("#googleMap").height(bodyheight - 70);
 });
 
 // for the window resize
 $(window).resize(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 50);
+    $("#googleMap").height(bodyheight - 70);
 });
 
 var map;

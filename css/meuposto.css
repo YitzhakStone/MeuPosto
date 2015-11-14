@@ -9,3 +9,7 @@ body {
 div.container.body-content {
     display: none;
 }
+
+#site{
+	margin-top: 50px;
+}
