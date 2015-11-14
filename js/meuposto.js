@@ -14,6 +14,7 @@ var map;
 var opendInfoWindow;
 var sorompilo;
 var all_markers = {};
+var queryStr = '';
 
 function carregarPostos() {
     var bounds = map.getBounds();
@@ -138,6 +139,7 @@ function initialize() {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             sorompilo = initialLocation;
             map.setCenter(initialLocation);
+            queryStr = 'lat=' + position.coords.latitude.toString() + "&lng=" + position.coords.longitude.toString();
         }, function () {
             handleNoGeolocation(browserSupportFlag);
         });
@@ -200,8 +202,9 @@ function tracarRota(enderDe, enderAte) {
 /* fim traçar rota */
 
 $(document).ready(function () {
-    $("#buscar").click(function(e) {
+    $("#buscar-melhor").click(function(e) {
         e.preventDefault();
+        window.open('py/calcular-melhor-posto.py?' + queryStr);
         
     });
 });
