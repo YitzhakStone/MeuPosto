@@ -1,26 +1,30 @@
-#googleMap {
-    width: 100%;
-}
-
 body {
     padding-bottom: 0;
+}
+
+form {
+	display: none;
 }
 
 div.container.body-content {
     display: none;
 }
 
-#mapao{
-	margin-top: 50px;
+#mapao {
+	margin-top: -20px;
+}
+
+#googleMap {
+    width: 100%;
 }
 
 table.preco-comb {
-  border-collapse: collapse;
+	border-collapse: collapse;
 }
 
-.preco-comb td, .preco-comb th {
-  border: 1px solid #999;
-  padding: 0.3rem;
-  text-align: center;
-  width: 45px;
-}
+	table.preco-comb td, table.preco-comb th {
+  		border: 1px solid #999;
+  		padding: 0.3rem;
+  		text-align: center;
+  		width: 45px;
+	}

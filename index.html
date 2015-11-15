@@ -7,57 +7,145 @@
     <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <title>MeuPosto</title>
 
-    <!-- BOOTSTRAP CSS -->
+    <!-- CSS BOOTSTRAP -->
     <link rel="stylesheet"  href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="lib/bootstrap/css/font-awesome-4.4.0.min.css">
+
+    <!-- CSS RATY -->
+    <link rel="stylesheet" href="lib/raty-2.7.0/jquery.raty.css">
     
+    <!-- CSS MeuPosto -->
     <link rel="stylesheet" href="css/meuposto.css">
-    <link rel="stylesheet" href="css/star-rating.css">
 
     <script src="js/jquery-1.10.2.js"></script>
+
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAkUbsC-g6QhmpIbKtC9Mr11cGziUKZBKw&signed_in=false"></script>
 
-    <link rel="stylesheet" href="lib/raty-2.7.0/jquery.raty.css">
-    <script src="lib/raty-2.7.0/jquery.raty.js"></script>
-
-    <!-- BOOTSTRAP JS --> 
+    <!-- JS BOOTSTRAP --> 
     <script src="lib/bootstrap/js/bootstrap.js"></script>
 
+    <!-- JS RATY -->
+    <script src="lib/raty-2.7.0/jquery.raty.js"></script>
+
+    <!-- path.js -->
+    <script src="js/path.min.js"></script>
+
+    <!-- firebase -->
+    <script src="js/firebase.js"></script>
+    <script src="js/jquery.serialize-object.compiled.js"></script>
+
+    <!-- JS MeuPosto -->
     <script src="js/meuposto.js"></script>
-    <script src="js/star-rating.js"></script>
+    <script src="js/meuposto-path.js"></script>
 </head>
 
 <body>
 
-    <nav id="myNavbar" class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
+    <header class="navbar navbar-static-top navbar-inverse" id="top" role="banner">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">MeuPosto</a>
+                </button> <a href="#/" class="navbar-brand">MeuPosto</a>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="./">Home</a></li>
-                    <li><a href="./">Sobre</a></li>
-                    <li><a href="./">Contato</a></li>
+                    <li> <a href="#/login">Entrar</a></li>
+                    <li> <a href="#/register">Registrar</a></li>
+                    <li> <a href="#/profile">Meu Perfil</a></li>
+                    <li> <a href="#/logout">Sair</a></li>
                 </ul>
+            </nav>
+        </div>
+    </header>
+
+    <form id="frmMapa" role="form">
+        <div id="mapao">
+            <div id="googleMap"></div>
+        </div>
+        <div id="modaisPostos"></div>
+    </form>
+
+    <div id="container" class="container">
+        <!-- LOGIN -->
+        <form id="frmLogin" role="form">
+             <h2>Entrar</h2>
+
+            <div class="form-group">
+                <label for="txtEmail">Email</label>
+                <input type="email" class="form-control" id="txtEmail" placeholder="Enter email" name="email" />
+            </div>
+            <div class="form-group">
+                <label for="txtPass">Senha</label>
+                <input type="password" class="form-control" id="txtPass" placeholder="Password" name="password" />
+            </div>
+            <button type="submit" class="btn btn-default btn-block">Entrar</button>
+            <br />
+            <br />
+            <h4>Entrar usando</h4>
+            <a href="#" class="btn btn-primary bt-social" data-provider="facebook">Facebook</a>
+            <a href="#" class="btn btn-info bt-social" data-provider="twitter">Twitter</a>
+            <!-- <a href="#" class="btn btn-danger bt-social" data-provider="google">Google+</a> --> 
+            <a href="#" class="btn btn-default bt-social" data-provider="github">GitHub</a>
+            <a href="#" class="btn btn-warning" id="btAnon">Anon</a>
+        </form>
+        <!-- / LOGIN -->
+        <!-- LOGOUT -->
+        <form id="frmLogout" role="form">
+             <h2>You are logged out!</h2>
+        </form>
+        <!-- / LOGOUT -->
+        <!-- REGISTER -->
+        <form id="frmRegister" role="form">
+             <h2>Registrar</h2>
+            <div class="form-group">
+                <label for="txtRegEmail">Email</label>
+                <input type="email" class="form-control" id="txtEmail" placeholder="Enter email" name="email" />
+            </div>
+            <div class="form-group">
+                <label for="txtRegPass">Senha</label>
+                <input type="password" class="form-control" id="txtPass" placeholder="Password" name="password" />
+            </div>
+            <button type="submit" class="btn btn-default">Registrar</button>
+        </form>
+        <!-- / REGISTER -->
+        <!-- PROFILE -->
+        <form id="frmProfile" role="form">
+             <h2>Meu Perfil</h2>
+            <br />
+            <div class="form-group">
+                <label for="txtName">Nome</label>
+                <input type="text" class="form-control" id="txtName" placeholder="Name" name="name" />
+            </div>
+            <div class="form-group">
+                <label for="ddlDino">Combustível padrão</label>
+                <select id="ddlDino" name="favoriteDinosaur" class="form-control">
+                    <option>Nenhuma</option>
+                    <option>Gasolina</option>
+                    <option>Álcool</option>
+                    <option>Diesel</option>
+                    <option>GNV</option>
+                    <option>Gasolina Adtivada</option>
+                    <option>Gasolina Premium</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+        <!-- / PROFILE -->        
+        
+        <!-- ALERT BOX -->
+        <div id="alerta-erro-login" style="display: none;">
+            <hr />
+            <div id="alert" class="alert" role="alert">
+                <h4 id="alert-title">Você não está conectado em sua conta.</h4>
+                <p id="alert-detail"></p>
             </div>
         </div>
-    </nav>
-
-
-    <div id="mapao">
-        <div id="googleMap"></div>
+        <!-- / ALERT BOX -->
     </div>
-
-    <div id="modaisPostos"></div>
 
 </body>
 </html>
