@@ -14,3 +14,13 @@ div.container.body-content {
 	margin-top: 50px;
 }
 
+table.preco-comb {
+  border-collapse: collapse;
+}
+
+.preco-comb td, .preco-comb th {
+  border: 1px solid #999;
+  padding: 0.3rem;
+  text-align: center;
+  width: 45px;
+}

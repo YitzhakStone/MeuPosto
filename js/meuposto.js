@@ -1,13 +1,13 @@
 // Redimensionar o mapa para ficar na tela toda
 $(document).ready(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 200);
+    $("#googleMap").height(bodyheight - 70);
 });
 
 // for the window resize
 $(window).resize(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 200);
+    $("#googleMap").height(bodyheight - 70);
 });
 
 var map;
@@ -82,7 +82,7 @@ function AddMarker(value, index, ar) {
                     data-notaMedia="' + value.Avaliacao + '"></div>\
                 <div style="display: inline-block; margin-left: 5px;">(Média: ' + nota + ')</div>\
             </div><br />\
-                <table>\
+                <table class="preco-comb">\
                     <tr>\
                         <th>G</th>\
                         <th>A</th>\
