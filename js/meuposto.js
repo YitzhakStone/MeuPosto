@@ -1,13 +1,13 @@
 // Redimensionar o mapa para ficar na tela toda
 $(document).ready(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 70);
+    $("#googleMap").height(bodyheight - 200);
 });
 
 // for the window resize
 $(window).resize(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 70);
+    $("#googleMap").height(bodyheight - 200);
 });
 
 var map;
@@ -36,6 +36,19 @@ function carregarPostos() {
     });
 }
 
+function avaliar(idPosto, nota) {
+    if (nota == null) {
+        alert('Avaliação cancelada.');
+        // Ao cancelar, define o score das estrelas com a nota média
+        var notaMedia = $('#AvalPosto' + this.id).attr('data-notaMedia');
+        $('#AvalPosto' + idPosto).raty('set', { score: notaMedia });
+        // chamar função para deletar a avaliação do usuário no banco
+    } else {
+        alert(nota.toString() + ' estrelas.');
+        // chamar função para inserir a avaliação do usuário no banco
+    }
+}
+
 function AddMarker(value, index, ar) {
 
     //$('#rating' + value.ID.toString()).rating();
@@ -53,24 +66,42 @@ function AddMarker(value, index, ar) {
         title: value.Nome
     });
 
-    var nota = value.Avaliacao != null ? value.Avaliacao + ' / 5' : 'Sem nota';
+    var nota = value.Avaliacao != 'None' ? parseFloat(value.Avaliacao).toFixed(1) : 'Sem nota';
 
+    // HTML do balãozinho do posto
     var infowindow = new google.maps.InfoWindow({
         content: 
             '<a class="idposto" style="display:none">' + value.ID + '</a>\
             <b>[' + value.ID + '] ' + value.Nome + '</b>\
             <br>' + value.Logr + ', ' + value.Num + ' - ' + value.Bairro + '\
-            <br /><br />Nota: ' + nota + '\
-            <div id="rating' + value.ID + '" class="rating" style="display:none;" \
-                title="Nota Média: ' + value.Avaliacao + '" >\
-                <input type="number" class="rating" value="4" >\
-            </div>\
-            <br />\
-                <table><tr><th>Gasolina</th><th>Álcool</th><th>Diesel</th><th>GNV</th><th>Gas.Adt.</th><th>Gas.Premium</th></tr>\
-                <tr>' + '<td>' + value.ValorGasolina + '</td><td>' + value.ValorAlcool + '</td><td>' + value.ValorDiesel + '</td><td>' + value.ValorGNV + '</td><td>' + value.ValorGasolinaAdt + '</td><td>' + value.ValorGasolinaPremium + '</td></tr>\
+            <div>\
+                <div style="display: inline-block;"\
+                    id="AvalPosto' + value.ID + '"\
+                    data-score="' + value.Avaliacao + '"\
+                    data-idPosto="' + value.ID + '"\
+                    data-notaMedia="' + value.Avaliacao + '"></div>\
+                <div style="display: inline-block; margin-left: 5px;">(Média: ' + nota + ')</div>\
+            </div><br />\
+                <table>\
+                    <tr>\
+                        <th>G</th>\
+                        <th>A</th>\
+                        <th>D</th>\
+                        <th>GNV</th>\
+                        <th>GA</th>\
+                        <th>GP</th>\
+                    </tr>\
+                    <tr>\
+                        <td>' + value.ValorGasolina.replace("None", "-")        + '</td>\
+                        <td>' + value.ValorAlcool.replace("None", "-")          + '</td>\
+                        <td>' + value.ValorDiesel.replace("None", "-")          + '</td>\
+                        <td>' + value.ValorGNV.replace("None", "-")             + '</td>\
+                        <td>' + value.ValorGasolinaAdt.replace("None", "-")     + '</td>\
+                        <td>' + value.ValorGasolinaPremium.replace("None", "-") + '</td>\
+                    </tr>\
                 </table>\
             <br />\
-            <a href="#" onClick="tracarRota(\'\', \'' + value.Lat + ', ' + value.Lng + '\')">Rota</a>'
+            <a href="#" onClick="tracarRota(\'' + value.Lat + ', ' + value.Lng + '\')">Rota</a>'
     });
 
     // preencher o conteúdo do balão a cada clique. utiliza apenas um 'infowindow'
@@ -79,8 +110,7 @@ function AddMarker(value, index, ar) {
     //    infowindow.open(map, this);
     //});
 
-    // abre balão de info ao clicar no marker
-    // e fecha o balão que estiver aberto
+    // abre balão de info ao clicar no marker e fecha o balão que estiver aberto
     marker.addListener('click', function () {
 
         if (opendInfoWindow != undefined) {
@@ -99,15 +129,19 @@ function AddMarker(value, index, ar) {
         var idPosto = $('a.idposto').html();
 
         // Inicializa as estrelinhas!
-        //$('#rating' + idPosto).rating();
-
-
-        $('#rating' +idPosto).rating({
-              min: 0,
-              max: 5,
-              step: 1,
-              size: 'xxs'
-           });
+        $('#AvalPosto' + idPosto).raty({
+            // Quantas estrelas vão aparecer marcadas
+            score: function() {
+                return $(this).attr('data-score');
+            },
+            // Evento ao avaliar
+            click: function(score, evt) {
+                var idPostoRaty = $('#' + this.id).attr('data-idPosto')
+                avaliar(idPostoRaty, score);
+            },
+            // Botão de cancelar avaliação
+            cancel: true
+        });
 
     });
 
@@ -168,7 +202,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 /* traçar rota */
-function tracarRota(enderDe, enderAte) {
+function tracarRota(enderAte) {
     var directionsService;
     var directionsRenderer;
 
@@ -180,7 +214,7 @@ function tracarRota(enderDe, enderAte) {
     /* pegar localização atual */
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            enderDe = position.coords.latitude + ", " + position.coords.longitude;
+            //enderDe = position.coords.latitude + ", " + position.coords.longitude;
         }, function () {
         });
     }
