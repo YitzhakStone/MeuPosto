@@ -68,71 +68,75 @@ function AddMarker(value, index, ar) {
 
     var nota = value.Avaliacao != 'None' ? parseFloat(value.Avaliacao).toFixed(1) : 'Sem nota';
 
-    // HTML do balãozinho do posto
-    var infowindow = new google.maps.InfoWindow({
-        content: 
-            '<a class="idposto" style="display:none">' + value.ID + '</a>\
-            <b>[' + value.ID + '] ' + value.Nome + '</b>\
-            <br>' + value.Logr + ', ' + value.Num + ' - ' + value.Bairro + '\
-            <div>\
-                <div style="display: inline-block;"\
-                    id="AvalPosto' + value.ID + '"\
-                    data-score="' + value.Avaliacao + '"\
-                    data-idPosto="' + value.ID + '"\
-                    data-notaMedia="' + value.Avaliacao + '"></div>\
-                <div style="display: inline-block; margin-left: 5px;">(Média: ' + nota + ')</div>\
-            </div><br />\
-                <table class="preco-comb">\
-                    <tr>\
-                        <th>G</th>\
-                        <th>A</th>\
-                        <th>D</th>\
-                        <th>GNV</th>\
-                        <th>GA</th>\
-                        <th>GP</th>\
-                    </tr>\
-                    <tr>\
-                        <td>' + value.ValorGasolina.replace("None", "-")        + '</td>\
-                        <td>' + value.ValorAlcool.replace("None", "-")          + '</td>\
-                        <td>' + value.ValorDiesel.replace("None", "-")          + '</td>\
-                        <td>' + value.ValorGNV.replace("None", "-")             + '</td>\
-                        <td>' + value.ValorGasolinaAdt.replace("None", "-")     + '</td>\
-                        <td>' + value.ValorGasolinaPremium.replace("None", "-") + '</td>\
-                    </tr>\
-                </table>\
-            <br />\
-            <a href="#" onClick="tracarRota(\'' + value.Lat + ', ' + value.Lng + '\')">Rota</a>'
-    });
+    var modalPosto = '\
+        <div id="modalPosto' + value.ID + '" class="modal fade" role="dialog">\
+            <div class="modal-dialog">\
+                <div class="modal-content">\
+                    <div class="modal-header">\
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>\
+                        <h4 class="modal-title">[' + value.ID + '] ' + value.Nome + '</h4>\
+                    </div>\
+                    <div class="modal-body">\
+                        <p>' + value.Logr + ', ' + value.Num + ' - ' + value.Bairro + '</p>\
+                        <p>\
+                            <div style="display: inline-block;"\
+                                id="AvalPosto' + value.ID + '"\
+                                data-idPosto="' + value.ID + '"\
+                                data-path="lib/raty-2.7.0/images/red"\
+                                data-notaMedia="' + value.Avaliacao + '\
+                                data-notaUser="' + value.Avaliacao + '"></div>\
+                            <div style="display: inline-block; margin-left: 5px;">(Média: ' + nota + ')</div>\
+                        </p>\
+                        <p><table class="preco-comb">\
+                            <tr>\
+                                <th>G</th>\
+                                <th>A</th>\
+                                <th>D</th>\
+                                <th>GNV</th>\
+                                <th>GA</th>\
+                                <th>GP</th>\
+                            </tr>\
+                            <tr>\
+                                <td>' + value.ValorGasolina.replace("None", "-")        + '</td>\
+                                <td>' + value.ValorAlcool.replace("None", "-")          + '</td>\
+                                <td>' + value.ValorDiesel.replace("None", "-")          + '</td>\
+                                <td>' + value.ValorGNV.replace("None", "-")             + '</td>\
+                                <td>' + value.ValorGasolinaAdt.replace("None", "-")     + '</td>\
+                                <td>' + value.ValorGasolinaPremium.replace("None", "-") + '</td>\
+                            </tr>\
+                        </table></p>\
+                        <p><a href="#" onClick="tracarRota(\'' + value.Lat + ', ' + value.Lng + '\')">Rota</a></p>\
+                    </div>\
+                    <div class="modal-footer">\
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>';
 
-    // preencher o conteúdo do balão a cada clique. utiliza apenas um 'infowindow'
-    //google.maps.event.addListener(someMarker, 'click', function () {
-    //    infowindow.setContent('Hello World');
-    //    infowindow.open(map, this);
-    //});
+    $('#modaisPostos').append(modalPosto);
 
-    // abre balão de info ao clicar no marker e fecha o balão que estiver aberto
+    marker.set("idPosto", value.ID);
+
+    // abre modal com as info do posto ao clicar no marker
     marker.addListener('click', function () {
 
-        if (opendInfoWindow != undefined) {
-            opendInfoWindow.close();
-            //return;
-        }
-        infowindow.open(map, marker);
-        opendInfoWindow = infowindow;
-
-        // html que estará dentro do balão
-        var htmlString = opendInfoWindow.content
-          , parser = new DOMParser()
-          , doc = parser.parseFromString(htmlString, "text/html");
-
         // Recupera o id do posto
-        var idPosto = $('a.idposto').html();
+        var idPosto = this.get("idPosto");
+
+        $('#modalPosto' + idPosto).modal();
 
         // Inicializa as estrelinhas!
         $('#AvalPosto' + idPosto).raty({
             // Quantas estrelas vão aparecer marcadas
             score: function() {
-                return $(this).attr('data-score');
+                var scoreUser = $(this).attr('data-notaUser');
+                var scoreAvg = $(this).attr('data-notaMedia');
+                if (scoreUser != undefined){
+                    return scoreUser;
+                } else {
+                    return scoreAvg;
+                }
             },
             // Evento ao avaliar
             click: function(score, evt) {
