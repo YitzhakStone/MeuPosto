@@ -155,6 +155,10 @@
         alertBox.children('#alert-detail').text(detail);
     }
 
+    function mostrarMenus(usuarioLogado) {
+
+    }
+
     /// Controllers
     ////////////////////////////////////////
 

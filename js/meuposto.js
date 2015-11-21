@@ -178,6 +178,7 @@ function initialize() {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             sorompilo = initialLocation;
             map.setCenter(initialLocation);
+            MarcarUser(initialLocation);
             queryStr = 'lat=' + position.coords.latitude.toString() + "&lng=" + position.coords.longitude.toString();
         }, function () {
             handleNoGeolocation(browserSupportFlag);
@@ -199,7 +200,24 @@ function initialize() {
         }
         map.setCenter(initialLocation);
     }
+
+    function MarcarUser(userPosition) {
+        var marker = new google.maps.Marker({
+            map: map,
+            clickable: false,
+            shadow: null,
+            zIndex: 999,
+            position: userPosition,
+            title: 'eu',
+            icon: new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+            new google.maps.Size(22,22),
+            new google.maps.Point(0,18),
+            new google.maps.Point(11,11))
+        });
+    }
+
     /* fim localização */
+
 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -251,4 +269,5 @@ $(document).ready(function () {
         window.open('py/calcular-melhor-posto.py' + queryStr);
         
     });
+
 });
