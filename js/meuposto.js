@@ -332,9 +332,16 @@ function RedefinirIcones() {
 
 function BuscarMelhor() {
 
-    latcenter = map.getCenter().lat();
-    lngcenter = map.getCenter().lng()
-    queryStr = '?lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
+    RedefinirIcones();
+
+    if (sorompilo == undefined) {
+        alert('Não possível recuperar sua localização.');
+        return;
+    }
+
+    lat = sorompilo.lat();
+    lng = sorompilo.lng()
+    queryStr = '?lat=' + lat.toString() + "&lng=" + lng.toString();
 
     jQuery.ajax({
         url: 'py/calcular-melhor-posto.py' + queryStr,
@@ -349,9 +356,13 @@ function BuscarMelhor() {
 
 }
 
-function MarcarMelhores(data) {
-    console.log(data.NotaFinal);
-    console.log(data.ID);
+function MarcarMelhores(data, ix) {
+    var iconText = ix + 1;
+    var iconPath = "http://mt.google.com/vt/icon?psize=16&font=fonts/Roboto-Regular.ttf&color=ff330000&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=48&scale=1&text=" + iconText.toString();
+
+    if (ix < 5) {
+        all_markers[data.ID].setIcon(iconPath);
+    }
 }
 
 $(document).ready(function () {
