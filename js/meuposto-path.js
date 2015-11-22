@@ -129,6 +129,8 @@
         $.when(promise)
             .then(function (authData) {
 
+            mostrarMenus();
+
             // route
             routeTo(route);
 
@@ -155,8 +157,32 @@
         alertBox.children('#alert-detail').text(detail);
     }
 
-    function mostrarMenus(usuarioLogado) {
+    /// Métodos aux para os Controllers
+    ////////////////////////////////////////
 
+    function MostrarMenusUsuarioLogado() {
+        $("#li-menu-princ--entrar").css('display', 'none');
+        $("#li-menu-princ--registrar").css('display', 'none');
+        $("#li-menu-princ--perfil").css('display', 'block');
+        $("#li-menu-princ--sair").css('display', 'block');
+    }
+
+    function MostrarMenusUsuarioNaoLogado() {
+        $("#li-menu-princ--entrar").css('display', 'block');
+        $("#li-menu-princ--registrar").css('display', 'block');
+        $("#li-menu-princ--perfil").css('display', 'none');
+        $("#li-menu-princ--sair").css('display', 'none');
+    }
+
+    function mostrarMenus() {
+        var usuarioLogado = rootRef.getAuth();
+        console.log(usuarioLogado);
+
+        if (usuarioLogado != undefined) {
+            MostrarMenusUsuarioLogado();
+        } else {
+            MostrarMenusUsuarioNaoLogado();
+        }
     }
 
     /// Controllers
@@ -164,9 +190,12 @@
 
     controllers.mapa = function (form) {
         $('#alerta-erro-login').css('display', 'none');
+        mostrarMenus();
     };
 
     controllers.login = function (form) {
+
+        mostrarMenus();
 
         // Form submission for logging in
         form.on('submit', function (e) {
@@ -190,11 +219,15 @@
             socialLoginPromise = thirdPartyLogin(provider);
             handleAuthResponse(socialLoginPromise, 'profile');
 
+            mostrarMenus();
+
         });
 
         form.children('#btAnon').on('click', function (e) {
             e.preventDefault();
             handleAuthResponse(authAnonymously(), 'profilex');
+
+            mostrarMenus();
         });
 
     };
@@ -202,9 +235,12 @@
     // logout immediately when the controller is invoked
     controllers.logout = function (form) {
         rootRef.unauth();
+        mostrarMenus();
     };
 
     controllers.register = function (form) {
+
+        mostrarMenus();
 
         // Form submission for registering
         form.on('submit', function (e) {
@@ -215,12 +251,16 @@
 
             handleAuthResponse(loginPromise, 'profile');
 
+            mostrarMenus();
+
         });
 
     };
 
     controllers.profile = function (form) {
         
+        mostrarMenus();
+
         // Check the current user
         var user = rootRef.getAuth();
         var userRef;

@@ -1,14 +1,23 @@
 // Redimensionar o mapa para ficar na tela toda
 $(document).ready(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 70);
+    $("#googleMap").height(bodyheight - 51);
 });
 
 // for the window resize
 $(window).resize(function () {
     var bodyheight = $(window).height();
-    $("#googleMap").height(bodyheight - 70);
+    $("#googleMap").height(bodyheight - 51);
 });
+
+// the main firebase reference
+var rootRef = new Firebase('https://meuposto.firebaseio.com/web/uauth');
+
+function VerificarUsuarioLogado() {
+    var usuarioLogado = rootRef.getAuth();
+    var usuarioLogadoBool = (usuarioLogado != undefined)
+    return usuarioLogadoBool;
+}
 
 var map;
 var opendInfoWindow;
@@ -36,17 +45,26 @@ function carregarPostos() {
     });
 }
 
-function avaliar(idPosto, nota) {
+function avaliarPosto(idPosto, nota) {
+    if (!VerificarUsuarioLogado()) {
+        alert('Entre ou cadastre-se para avaliar os postos.');
+        return false;
+    }
+
     if (nota == null) {
         alert('Avaliação cancelada.');
+        
         // Ao cancelar, define o score das estrelas com a nota média
         var notaMedia = $('#AvalPosto' + this.id).attr('data-notaMedia');
         $('#AvalPosto' + idPosto).raty('set', { score: notaMedia });
+
         // chamar função para deletar a avaliação do usuário no banco
     } else {
         alert(nota.toString() + ' estrelas.');
+        
         // chamar função para inserir a avaliação do usuário no banco
     }
+    return true;
 }
 
 function AddMarker(value, index, ar) {
@@ -141,7 +159,7 @@ function AddMarker(value, index, ar) {
             // Evento ao avaliar
             click: function(score, evt) {
                 var idPostoRaty = $('#' + this.id).attr('data-idPosto')
-                avaliar(idPostoRaty, score);
+                return avaliarPosto(idPostoRaty, score);
             },
             // Botão de cancelar avaliação
             cancel: true
@@ -170,23 +188,37 @@ function initialize() {
     //google.maps.event.addListenerOnce(map, 'idle', carregarTodosOsPostos);
     google.maps.event.addListener(map, 'idle', carregarPostos);
 
+    //alert('Tentando definir posição do  usuário...');
+
     /* localização */
     // Try W3C Geolocation (Preferred)
     if (navigator.geolocation) {
+        
+        //alert('Navegador suporta geo-localização.');
+
         browserSupportFlag = true;
         navigator.geolocation.getCurrentPosition(function (position) {
+            
+            //alert('Eutrou na função.');
+
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             sorompilo = initialLocation;
             map.setCenter(initialLocation);
             MarcarUser(initialLocation);
             queryStr = 'lat=' + position.coords.latitude.toString() + "&lng=" + position.coords.longitude.toString();
         }, function () {
+            
+            //alert('call handleNoGeolocation');
+
             handleNoGeolocation(browserSupportFlag);
         });
     }
         // Browser doesn't support Geolocation
     else {
         browserSupportFlag = false;
+        
+        alert('Seu navegador não possui o recurso de geo-localização. Alguns recursos não estarão disponíveis');
+
         handleNoGeolocation(browserSupportFlag);
     }
 
@@ -198,6 +230,7 @@ function initialize() {
             alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
             initialLocation = siberia;
         }
+        alert(errorFlag);
         map.setCenter(initialLocation);
     }
 
@@ -259,7 +292,7 @@ function tracarRota(enderAte) {
 /* fim traçar rota */
 
 $(document).ready(function () {
-    $("#buscar-melhor").click(function(e) {
+    $("#btn-buscar-melhor").click(function(e) {
         e.preventDefault();
 
         latcenter = map.getCenter().lat();
@@ -269,5 +302,4 @@ $(document).ready(function () {
         window.open('py/calcular-melhor-posto.py' + queryStr);
         
     });
-
 });

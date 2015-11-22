@@ -28,3 +28,14 @@ table.preco-comb {
   		text-align: center;
   		width: 45px;
 	}
+
+#div-btn-buscar-melhor {
+  position: absolute;
+  left: 2%;
+  bottom: 10%;
+}
+
+#btn-buscar-melhor > span {
+  font-size: 24px;
+  top: 7px;
+}

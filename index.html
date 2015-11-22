@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="pt">
 
 <head>
     <meta charset="utf-8" />
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="lib/raty-2.7.0/jquery.raty.css">
     
     <!-- CSS MeuPosto -->
-    <link rel="stylesheet" href="css/meuposto.css">
+    <link rel="stylesheet" href="css/meuposto.css?v=20151121115322">
 
     <script src="js/jquery-1.10.2.js"></script>
 
@@ -35,8 +35,12 @@
     <script src="js/jquery.serialize-object.compiled.js"></script>
 
     <!-- JS MeuPosto -->
-    <script src="js/meuposto.js"></script>
-    <script src="js/meuposto-path.js"></script>
+    <script src="js/meuposto.js?v=20151121115322"></script>
+    <script src="js/meuposto-path.js?v=20151121115322"></script>
+
+
+    <link rel="stylesheet"  href="css/mui.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -53,20 +57,29 @@
             </div>
             <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li> <a href="#/login">Entrar</a></li>
-                    <li> <a href="#/register">Registrar</a></li>
-                    <li> <a href="#/profile">Meu Perfil</a></li>
-                    <li> <a href="#/logout">Sair</a></li>
+                    <li id="li-menu-princ--entrar"><a href="#/login">Entrar</a></li>
+                    <li id="li-menu-princ--registrar"><a href="#/register">Registrar</a></li>
+                    <li id="li-menu-princ--perfil"><a href="#/profile">Meu Perfil</a></li>
+                    <li id="li-menu-princ--sair"><a href="#/logout">Sair</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <form id="frmMapa" role="form">
+
+        <div id="div-btn-buscar-melhor">
+            <button id="btn-buscar-melhor" class="mui-btn mui-btn--fab mui-btn--danger">
+                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            </button>
+        </div>   
+
         <div id="mapao">
             <div id="googleMap"></div>
         </div>
+
         <div id="modaisPostos"></div>
+
     </form>
 
     <div id="container" class="container">
@@ -82,7 +95,7 @@
                 <label for="txtPass">Senha</label>
                 <input type="password" class="form-control" id="txtPass" placeholder="Password" name="password" />
             </div>
-            <button type="submit" class="btn btn-default btn-block">Entrar</button>
+            <button type="submit" class="btn btn-primary">Entrar</button>
             <br />
             <br />
             <h4>Entrar usando</h4>
@@ -109,7 +122,7 @@
                 <label for="txtRegPass">Senha</label>
                 <input type="password" class="form-control" id="txtPass" placeholder="Password" name="password" />
             </div>
-            <button type="submit" class="btn btn-default">Registrar</button>
+            <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
         <!-- / REGISTER -->
         <!-- PROFILE -->

@@ -28,8 +28,8 @@ def NormalizarNota(_nota):
     return notaNorm
 
 def CalcularValor(_dist, _preco, _nota):
-    _dist
     valor = ((_dist if _dist != None else 0) + (_preco if _preco != None else 0) + (_nota if _nota != None else 0)) / 3
+    return valor
 
 #########################################
 # Inicio
@@ -173,12 +173,11 @@ for k, v in postos.iteritems():
     v['ValorGasolina_Norm'] = Normalizar(valMinGas, valMaxGas, v['ValorGasolina'])
     v['Avaliacao_Norm'] = NormalizarNota(v['Avaliacao'])
 
-    #v['NotaFinal'] = ((v['Distancia_Norm'] if v['Distancia_Norm'] != None else 0) + (v['ValorGasolina_Norm'] if v['ValorGasolina_Norm'] != None else 0) + (v['Avaliacao_Norm'] if v['Avaliacao_Norm'] != None else 0)) / 3
     v['NotaFinal'] = CalcularValor(float(v['Distancia_Norm']), float(v['ValorGasolina_Norm']), float(v['Avaliacao_Norm']))
 
     dist_i = dist_i + 1
 
-
+'''
 # Testar exibindo na tela os resultados
 print "Content-type: text/html\n\n"
 for k, r in postos.iteritems():
@@ -194,7 +193,22 @@ for k, r in postos.iteritems():
 print '<br>'
 print '<br>'
 print '<br>'
+'''
 
+postosOrdenados = collections.OrderedDict()
+for key, value in sorted(postos.iteritems(), key=lambda (k,v): (v['NotaFinal']*(-1), k)):
+    postosOrdenados[str(value['ID'])] = value
+    '''
+    print "%s: %s" % (key, value)
+    print '<br>'
+    print '<br>'
+    '''
+
+'''
+print '<br>'
+print '<br>'
+print '<br>'
+'''
 
 # Necessário para converter valores decimais no JSON
 import decimal, simplejson
@@ -205,7 +219,7 @@ class DecimalJSONEncoder(simplejson.JSONEncoder):
         return super(DecimalJSONEncoder, self).default(o)
 
 # convert to json
-j = simplejson.dumps(postos, cls=DecimalJSONEncoder, encoding='ISO-8859-1')
+j = simplejson.dumps(postosOrdenados, cls=DecimalJSONEncoder, encoding='ISO-8859-1')
 
 # output
 print "Content-type: application/json\n\n"
