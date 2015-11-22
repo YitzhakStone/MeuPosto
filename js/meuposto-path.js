@@ -176,7 +176,7 @@
 
     function mostrarMenus() {
         var usuarioLogado = rootRef.getAuth();
-        console.log(usuarioLogado);
+        //console.log(usuarioLogado);
 
         if (usuarioLogado != undefined) {
             MostrarMenusUsuarioLogado();

@@ -51,20 +51,49 @@ function avaliarPosto(idPosto, nota) {
         return false;
     }
 
+    var uid = rootRef.getAuth().uid;
+
     if (nota == null) {
+        DeletarNota(uid, idPosto);
         alert('Avaliação cancelada.');
-        
+
         // Ao cancelar, define o score das estrelas com a nota média
         var notaMedia = $('#AvalPosto' + this.id).attr('data-notaMedia');
         $('#AvalPosto' + idPosto).raty('set', { score: notaMedia });
-
-        // chamar função para deletar a avaliação do usuário no banco
-    } else {
-        alert(nota.toString() + ' estrelas.');
         
-        // chamar função para inserir a avaliação do usuário no banco
+    } else {
+        CadastrarNota(uid, idPosto, nota);
+        alert(nota.toString() + ' estrelas.');
     }
     return true;
+}
+
+function CadastrarNota(uid, idposto, nota) {
+    queryStr = '?uid=' + uid + "&idposto=" + idposto + "&nota=" + nota;
+    jQuery.ajax({
+        url: 'py/avaliar-posto.py' + queryStr,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        failure: function (msg) { alert("Ocorreu um erro !!! "); }
+    });
+}
+
+function DeletarNota(uid, idposto) {
+    queryStr = '?uid=' + uid + "&idposto=" + idposto;
+    jQuery.ajax({
+        url: 'py/deletar-avaliacao-posto.py' + queryStr,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        failure: function (msg) { alert("Ocorreu um erro !!! "); }
+    });
 }
 
 function AddMarker(value, index, ar) {
