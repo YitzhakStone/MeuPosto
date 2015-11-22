@@ -23,6 +23,7 @@ var map;
 var opendInfoWindow;
 var sorompilo;
 var all_markers = {};
+var all_markers_keys = [];
 var queryStr = '';
 
 function carregarPostos() {
@@ -197,6 +198,7 @@ function AddMarker(value, index, ar) {
     });
 
     all_markers[value.ID] = marker;
+    all_markers_keys.push(value.ID);
 
 }
 
@@ -320,15 +322,41 @@ function tracarRota(enderAte) {
 }
 /* fim traçar rota */
 
+function RedefinirIcones() {
+
+    all_markers_keys.forEach( function(idposto) {
+        all_markers[idposto].setIcon();
+    });
+
+}
+
+function BuscarMelhor() {
+
+    latcenter = map.getCenter().lat();
+    lngcenter = map.getCenter().lng()
+    queryStr = '?lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
+
+    jQuery.ajax({
+        url: 'py/calcular-melhor-posto.py' + queryStr,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            data.forEach(MarcarMelhores);
+        },
+        failure: function (msg) { alert("Ocorreu um erro !!! "); }
+    });
+
+}
+
+function MarcarMelhores(data) {
+    console.log(data.NotaFinal);
+    console.log(data.ID);
+}
+
 $(document).ready(function () {
     $("#btn-buscar-melhor").click(function(e) {
         e.preventDefault();
-
-        latcenter = map.getCenter().lat();
-        lngcenter = map.getCenter().lng()
-        queryStr = '?lat=' + latcenter.toString() + "&lng=" + lngcenter.toString();
-
-        window.open('py/calcular-melhor-posto.py' + queryStr);
-        
+        BuscarMelhor();
     });
 });

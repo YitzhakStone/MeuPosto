@@ -195,9 +195,9 @@ print '<br>'
 print '<br>'
 '''
 
-postosOrdenados = collections.OrderedDict()
+postosOrdenados = []
 for key, value in sorted(postos.iteritems(), key=lambda (k,v): (v['NotaFinal']*(-1), k)):
-    postosOrdenados[str(value['ID'])] = value
+    postosOrdenados.append(value)
     '''
     print "%s: %s" % (key, value)
     print '<br>'
