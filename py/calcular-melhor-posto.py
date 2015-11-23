@@ -31,6 +31,32 @@ def CalcularValor(_dist, _preco, _nota):
     valor = ((_dist if _dist != None else 0) + (_preco if _preco != None else 0) + (_nota if _nota != None else 0)) / 3
     return valor
 
+def RecuperarPostos(_latMin, _latMax, _lngMin, _lngMax):
+    db = MySQLdb.connect(host="localhost", user="root", passwd="balde", db="MeuPosto")
+    cur = db.cursor()
+
+    cur.execute("""
+        SELECT
+            P.ID, P.Nome, P.Logr, P.Num, P.Bairro, P.Lat, P.Lng, T.Avaliacao,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 1) AS Valor_Alcool,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 2) AS Valor_Gasolina,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 3) AS Valor_GNV,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 4) AS Valor_Diesel,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 5) AS Valor_GasolinaAdt,
+            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 6) AS Valor_GasolinaPremium
+        FROM
+            Posto P LEFT JOIN
+            (
+                SELECT A.IDPosto, AVG(A.Avaliacao) AS Avaliacao FROM PostoAvaliacao A GROUP BY A.IDPosto
+            ) AS T ON T.IDPosto = P.ID
+        WHERE """
+            "P.Lat BETWEEN " + str(_latMin) + " AND " + str(_latMax) + " AND "
+            "P.Lng BETWEEN " + str(_lngMin) + " AND " + str(_lngMax) + " "
+        ";")
+
+    rows = cur.fetchall()
+    return rows
+
 #########################################
 # Inicio
 #########################################
@@ -76,29 +102,8 @@ while (qtdePostosRet < 5 and countIncrement < 10):
 
     countIncrement = countIncrement + 1
 
-    db = MySQLdb.connect(host="localhost", user="root", passwd="balde", db="MeuPosto")
-    cur = db.cursor()
+    rows = RecuperarPostos(latMin, latMax, lngMin, lngMax)
 
-    cur.execute("""
-        SELECT
-            P.ID, P.Nome, P.Logr, P.Num, P.Bairro, P.Lat, P.Lng, T.Avaliacao,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 1) AS Valor_Alcool,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 2) AS Valor_Gasolina,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 3) AS Valor_GNV,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 4) AS Valor_Diesel,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 5) AS Valor_GasolinaAdt,
-            (SELECT C.Valor FROM PostoCombustivel C WHERE C.IDPosto = P.ID AND C.IDComb = 6) AS Valor_GasolinaPremium
-        FROM
-            Posto P LEFT JOIN
-            (
-                SELECT A.IDPosto, AVG(A.Avaliacao) AS Avaliacao FROM PostoAvaliacao A GROUP BY A.IDPosto
-            ) AS T ON T.IDPosto = P.ID
-        WHERE """
-            "P.Lat BETWEEN " + str(latMin) + " AND " + str(latMax) + " AND "
-            "P.Lng BETWEEN " + str(lngMin) + " AND " + str(lngMax) + " "
-        ";")
-
-    rows = cur.fetchall()
     qtdePostosRet = len(rows)
 
     postos = collections.OrderedDict()
@@ -123,7 +128,8 @@ while (qtdePostosRet < 5 and countIncrement < 10):
         d['ValorGasolinaAdt'] = str(row[12])
         d['ValorGasolinaPremium'] = str(row[13])
 
-        # Não retornar postos sem preço de gasolina.
+        # Estamos testando somente com o preço da gasolina, então,
+        # não retornar postos sem preço de gasolina.
         if d['ValorGasolina'] != None:
             postos[str(d['ID'])] = d
 
