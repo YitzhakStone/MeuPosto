@@ -28,10 +28,10 @@ var queryStr = '';
 
 function carregarPostos() {
     var bounds = map.getBounds();
-    var latMin = bounds.O.O.toString()
-    var latMax = bounds.O.j.toString();
-    var lngMin = bounds.j.j.toString();
-    var lngMax = bounds.j.O.toString();
+    var latMin = getNorthEast().lat().toString();
+    var latMax = getSouthWest().lat().toString();
+    var lngMin = getSouthWest().lng().toString();
+    var lngMax = getNorthEast().lng().toString();
     queryStr = '?latMin=' + latMin + "&latMax=" + latMax + "&lngMin=" + lngMin + "&lngMax=" + lngMax;
 
     jQuery.ajax({
