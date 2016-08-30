@@ -337,7 +337,7 @@ function BuscarMelhor() {
 
     if (sorompilo == undefined) {
         console.log('Não foi possível recuperar sua localização, utilizando Belo Horizonte.');
-        initialLocation = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
+        sorompilo = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
         //return;
     }
 
