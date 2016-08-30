@@ -35,7 +35,8 @@ function carregarPostos() {
     queryStr = '?latMin=' + latMin + "&latMax=" + latMax + "&lngMin=" + lngMin + "&lngMax=" + lngMax;
 
     jQuery.ajax({
-        url: 'py/recuperar-postos.py' + queryStr,
+        //url: 'py/recuperar-postos.py' + queryStr,
+        url: 'http://yitzhakstone.pythonanywhere.com/MeuPosto/api/recuperar-postos' + queryStr,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -261,7 +262,7 @@ function initialize() {
             alert("Your browser doesn't support geolocation. We've placed you in Belo Horizonte.");
             initialLocation = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
         }
-        alert(errorFlag);
+        //alert(errorFlag);
         map.setCenter(initialLocation);
     }
 
