@@ -255,11 +255,11 @@ function initialize() {
 
     function handleNoGeolocation(errorFlag) {
         if (errorFlag == true) {
-            alert("Geolocation service failed.");
-            initialLocation = 'Belo Horizonte';
+            console.log("Geolocation service failed.");
+            initialLocation = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
         } else {
-            alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
-            initialLocation = siberia;
+            alert("Your browser doesn't support geolocation. We've placed you in Belo Horizonte.");
+            initialLocation = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
         }
         alert(errorFlag);
         map.setCenter(initialLocation);
@@ -335,8 +335,9 @@ function BuscarMelhor() {
     RedefinirIcones();
 
     if (sorompilo == undefined) {
-        alert('Não possível recuperar sua localização.');
-        return;
+        console.log('Não foi possível recuperar sua localização, utilizando Belo Horizonte.');
+        initialLocation = {lat:-19.916681, lng:-43.934493}; // Belo Horizonte
+        //return;
     }
 
     lat = sorompilo.lat();
