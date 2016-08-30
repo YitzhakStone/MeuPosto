@@ -256,7 +256,7 @@ function initialize() {
     function handleNoGeolocation(errorFlag) {
         if (errorFlag == true) {
             alert("Geolocation service failed.");
-            initialLocation = newyork;
+            initialLocation = 'Belo Horizonte';
         } else {
             alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
             initialLocation = siberia;
